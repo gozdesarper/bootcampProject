@@ -16,5 +16,6 @@ public class CreatInstructorResponse {
 	private String email;
 	private String password;
 	private String companyName;
+	private String nationalIdentity;
 
 }

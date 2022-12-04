@@ -6,4 +6,8 @@ import com.kodlamaio.bootCampProject.entities.users.Applicant;
 
 public interface ApplicantRepository extends JpaRepository<Applicant, Integer>{
 
+	 Applicant findById (int id);
+	 Applicant findApplicantByNationalIdentity(String nationalIdentity);
+	 
+	 
 }

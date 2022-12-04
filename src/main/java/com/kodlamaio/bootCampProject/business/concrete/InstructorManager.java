@@ -13,6 +13,7 @@ import com.kodlamaio.bootCampProject.business.response.instructor.CreatInstructo
 import com.kodlamaio.bootCampProject.business.response.instructor.GetAllInstructorResponse;
 import com.kodlamaio.bootCampProject.business.response.instructor.GetInstructorResponse;
 import com.kodlamaio.bootCampProject.business.response.instructor.UpdateInstructorResponse;
+import com.kodlamaio.bootCampProject.core.ultities.exception.BusinessException;
 import com.kodlamaio.bootCampProject.core.ultities.mapping.ModelMapperService;
 import com.kodlamaio.bootCampProject.core.ultities.result.DataResult;
 import com.kodlamaio.bootCampProject.core.ultities.result.Result;
@@ -31,15 +32,17 @@ public class InstructorManager implements InstructorService {
 
 	@Override
 	public Result delete(int id) {
+		chekIfInstructorId(id); 
 		this.instructorRepository.deleteById(id);
 		return new SuccessResult(Messages.InstructorDeleted);
 	}
 
 	@Override
 	public DataResult<CreatInstructorResponse> add(CreateInstructorRequest createInstructorRequest) {
-		Instructor instructor = this.modelMapperService.forRequest().map(createInstructorRequest, Instructor.class);
+		checkIfInstructorNationalIdentity (createInstructorRequest.getNationalIdentity());
+		Instructor instructor = modelMapperService.forRequest().map(createInstructorRequest, Instructor.class);
 		instructorRepository.save(instructor);
-		CreatInstructorResponse creatInstructorResponse = this.modelMapperService.forResponse().map(instructor,
+		CreatInstructorResponse creatInstructorResponse = modelMapperService.forResponse().map(instructor,
 				CreatInstructorResponse.class);
 		return new SuccessDataResult<CreatInstructorResponse>(creatInstructorResponse, Messages.InstructorCreated);
 	}
@@ -50,27 +53,70 @@ public class InstructorManager implements InstructorService {
 		List<GetAllInstructorResponse> response = instructors.stream()
 				.map(instructor -> this.modelMapperService.forResponse().map(instructor, GetAllInstructorResponse.class))
 				.collect(Collectors.toList());
-		return new SuccessDataResult<List<GetAllInstructorResponse>>(response);
+		return new SuccessDataResult<List<GetAllInstructorResponse>>(response,Messages.InstructorListed);
 	}
 
 	@Override
 	public DataResult<UpdateInstructorResponse> update(UpdateInstructorRequest updateInstructorRequest) {
+		chekIfInstructorId(updateInstructorRequest.getId()); 
 		Instructor instructor = this.modelMapperService.forRequest().map(updateInstructorRequest, Instructor.class);
 		this.instructorRepository.save(instructor);
 		UpdateInstructorResponse updateInstructorResponse = this.modelMapperService.forResponse().map(instructor,
 				UpdateInstructorResponse.class);
-
 		return new SuccessDataResult<UpdateInstructorResponse>(updateInstructorResponse, Messages.InstructorUpdated);
 	}
 
 	@Override
 	public DataResult<GetInstructorResponse> getById(int id) {
+		chekIfInstructorId (id);
 		Instructor instructor = this.instructorRepository.findById(id).get();
 		GetInstructorResponse getInstructorResponse = this.modelMapperService.forResponse().map(instructor,
 				GetInstructorResponse.class);
 
 		return new SuccessDataResult<GetInstructorResponse>(getInstructorResponse);
 	}
+	@Override
+	public Instructor getByInstructorId(int InstructorId) {
+		Instructor instructor= chekIfInstructorId(InstructorId);
+		return instructor;
+	}
+	
+	private void checkIfInstructorNationalIdentity (String nationalIdentitiy) {
+		Instructor instructor = instructorRepository.findByNationalIdentity(nationalIdentitiy);
+		if(instructor!=null) {
+		throw new BusinessException(Messages.InstructorExist);
+		}
+	}
+	private Instructor chekIfInstructorId (int id) {
+		Instructor instructor = this.instructorRepository.findById(id).orElse(null);
+		if(instructor==null) {
+			throw new BusinessException(Messages.InstructortUserNotfond);
+		} 
+		return instructor;
+	}
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 //	@Override
 //	public CreatInstructorResponse add(CreateInstructorRequest creatInstructorRequest) {

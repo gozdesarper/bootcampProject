@@ -10,6 +10,7 @@ import com.kodlamaio.bootCampProject.business.response.instructor.GetInstructorR
 import com.kodlamaio.bootCampProject.business.response.instructor.UpdateInstructorResponse;
 import com.kodlamaio.bootCampProject.core.ultities.result.DataResult;
 import com.kodlamaio.bootCampProject.core.ultities.result.Result;
+import com.kodlamaio.bootCampProject.entities.users.Instructor;
 
 public interface InstructorService {
 
@@ -29,4 +30,5 @@ public interface InstructorService {
 
 	DataResult<GetInstructorResponse> getById(int id);
 
+	Instructor getByInstructorId(int InstructorId);
 }

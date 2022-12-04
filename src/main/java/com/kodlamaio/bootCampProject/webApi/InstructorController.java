@@ -2,6 +2,8 @@ package com.kodlamaio.bootCampProject.webApi;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,8 +40,8 @@ public class InstructorController {
 	Result delete(@PathVariable int id) {
 		return this.instructorService.delete(id);
 	}
-	@PostMapping("/add")
-	DataResult<CreatInstructorResponse> add(@RequestBody CreateInstructorRequest createInstructorRequest){
+	@PostMapping("")
+	DataResult<CreatInstructorResponse> add(@Valid @RequestBody CreateInstructorRequest createInstructorRequest){
 		return this.instructorService.add(createInstructorRequest);
 	}
 	@GetMapping("/getall")
@@ -47,7 +49,7 @@ public class InstructorController {
 		return this.instructorService.getAll();
 	}
 	@PutMapping()
-	DataResult<UpdateInstructorResponse> update(@RequestBody UpdateInstructorRequest updateInstructorRequest){
+	DataResult<UpdateInstructorResponse> update(@Valid @RequestBody UpdateInstructorRequest updateInstructorRequest){
 		return this.instructorService.update(updateInstructorRequest);
 	}
 	
